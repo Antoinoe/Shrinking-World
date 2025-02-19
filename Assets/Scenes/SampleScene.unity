@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 155987484}
   - component: {fileID: 155987483}
   - component: {fileID: 155987485}
+  - component: {fileID: 155987486}
   m_Layer: 0
   m_Name: Planet
   m_TagString: Untagged
@@ -202,7 +203,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 12, y: 12, z: 12}
+  m_LocalScale: {x: 24.05, y: 24.05, z: 24.05}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -243,6 +244,23 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &155987486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155987482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06b42e9db9615f343924fcf0788ee39b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startSize: 100
+  endSize: 3
+  startingShrinkingSpeed: 0.01
+  currentShrinkingSpeed: 0
+  shrinkingAcceleration: 0.000001
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,6 +273,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -373,13 +392,27 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.91, z: -10}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 12.58, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1363582802}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc19134d2f29944a825131c2b3853f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraLerpDistance: 0.891
+  cameraZOffset: -10
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -493,9 +526,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 286b82a928c6ab64bbd9eb626a1fdca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingShrinkingSpeed: 0
-  currentShrinkingSpeed: 0
-  shrinkingAcceleration: 0.1
+  OnGameOver:
+    m_PersistentCalls:
+      m_Calls: []
+  <PlayerController>k__BackingField: {fileID: 1363582803}
+  <CameraController>k__BackingField: {fileID: 519420033}
+  <PlanetController>k__BackingField: {fileID: 155987486}
 --- !u!4 &798642232
 Transform:
   m_ObjectHideFlags: 0
@@ -623,15 +659,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1363582801}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.022600042, w: 0.9997446}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1734471497}
-  - {fileID: 519420032}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 2.59}
 --- !u!114 &1363582803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -644,7 +679,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0576316eff947d746ac79350808720f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerVisual: {fileID: 1734471495}
+  <PlayerVisual>k__BackingField: {fileID: 1734471497}
   moveSpeed: 20
   gravitySpeed: 9.81
   gravityMultiplier: 20
@@ -731,8 +766,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1734471495}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 8.86, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 14.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -748,7 +783,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: c6927f5f0f6594643af1b0c74de3fa8c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -808,6 +843,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 619394802}
   - {fileID: 155987484}
+  - {fileID: 519420032}
   - {fileID: 1363582802}
   - {fileID: 798642232}
   - {fileID: 1146079164}

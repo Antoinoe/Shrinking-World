@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private GameObject playerVisual;
+    [field:SerializeField] public Transform PlayerVisual { get; private set; }
     [SerializeField] private float moveSpeed = 5.0f;
     [SerializeField] private float gravitySpeed = 9.81f;
     [SerializeField] private float gravityMultiplier = 1f;
@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        playerRB2D = playerVisual.GetComponent<Rigidbody2D>();
+        playerRB2D = PlayerVisual.GetComponent<Rigidbody2D>();
         if(playerRB2D == null)
         {
             Debug.LogError("could not retrieve rigidbody2D form player visual");
@@ -23,15 +23,23 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        playerVisual.transform.LookAt(new Vector3(playerVisual.transform.position.x, playerVisual.transform.position.y, transform.position.z));
         GetInputs();
         ApplyGravity();
+        UpdateRotation();
     }
+
+    private void UpdateRotation()
+    {
+        float angle = Vector2.SignedAngle(Vector2.down, GetOrientation());
+        PlayerVisual.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+    }
+
+    private Vector2 GetOrientation()
+        => ((Vector2)transform.position - (Vector2)PlayerVisual.transform.position).normalized;
 
     private void ApplyGravity()
     {
-        var dir = ((Vector2)transform.position - (Vector2)playerVisual.transform.position).normalized;
-        playerRB2D.AddForce(dir * gravitySpeed * gravityMultiplier * Time.fixedDeltaTime);
+        playerRB2D.AddForce(gravityMultiplier * gravitySpeed * Time.fixedDeltaTime * GetOrientation());
     }
 
     private void GetInputs()
@@ -49,8 +57,7 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.UpArrow))
         {
             print("jump");
-            var dir = ((Vector2)transform.position - (Vector2)playerVisual.transform.position).normalized;
-            playerRB2D.AddForce(-dir * jumpForce, ForceMode2D.Impulse);
+            playerRB2D.AddForce(-GetOrientation() * jumpForce, ForceMode2D.Impulse);
         }
     }
 }

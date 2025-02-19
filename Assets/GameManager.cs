@@ -1,12 +1,14 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-
-    [SerializeField] private float startingShrinkingSpeed;
-    [SerializeField] private float currentShrinkingSpeed;
-    [SerializeField] private float shrinkingAcceleration;
+    [HideInInspector] public UnityEvent OnGameOver;
+    [field:SerializeField] public PlayerController PlayerController { get; private set; }
+    [field:SerializeField] public CameraController CameraController { get; private set; }
+    [field:SerializeField] public PlanetController PlanetController { get; private set; }
 
     private void Awake()
     {
@@ -19,10 +21,18 @@ public class GameManager : MonoBehaviour
         Instance = this;
 
         DontDestroyOnLoad(this);
+
+        OnGameOver.AddListener(() => GameOver());
     }
 
     public void Play()
     {
         print("play");
+    }
+
+    internal void GameOver()
+    {
+        print("GameOver");
+        PlanetController.StopShrink();
     }
 }
