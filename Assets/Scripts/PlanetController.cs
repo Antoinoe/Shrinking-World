@@ -22,10 +22,22 @@ public class PlanetController : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.OnGameStarts.AddListener(() => OnGameStarts());
+        GameManager.Instance.OnGameOver.AddListener(() => OnGameOver());
         StopShrink();
         ResetSize();
         if(shrinkAtStart)
             StartShrink();        
+    }
+
+    private void OnGameStarts()
+    {
+        StartShrink();
+    }
+
+    private void OnGameOver()
+    {
+        StopShrink();
     }
 
     public void StartShrink()

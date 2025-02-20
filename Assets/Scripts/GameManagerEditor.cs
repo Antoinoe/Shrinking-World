@@ -11,7 +11,7 @@ public class GameManagerEditor : Editor
         GameManager gameManagerTarget = (GameManager)target;
         if (GUILayout.Button("Play"))
         {
-            gameManagerTarget.Play();
+            gameManagerTarget.StartGame();
         }
 
     }
