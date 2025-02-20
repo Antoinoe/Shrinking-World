@@ -973,6 +973,11 @@ MonoBehaviour:
   <JumpForce>k__BackingField: 10
   <GravitySpeed>k__BackingField: 9.81
   <GravityMultiplier>k__BackingField: 20
+  <DashSpeed>k__BackingField: 50
+  <DashMultiplier>k__BackingField: 1
+  <DashDuration>k__BackingField: 0.5
+  <DashCooldown>k__BackingField: 3
+  canDash: 1
 --- !u!1 &1734471495
 GameObject:
   m_ObjectHideFlags: 0

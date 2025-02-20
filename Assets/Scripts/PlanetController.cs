@@ -56,8 +56,8 @@ public class PlanetController : MonoBehaviour
     private void CheckSize()
     {
         if(transform.localScale.x < endSize)
-        { 
-            GameManager.Instance.OnGameOver?.Invoke();
+        {
+            GameManager.Instance.GameOver();
         }
     }
 

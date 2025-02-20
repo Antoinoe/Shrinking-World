@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
         DontDestroyOnLoad(this);
 
-        OnGameOver.AddListener(() => GameOver());
+        
     }
 
     public void Play()
@@ -30,9 +30,10 @@ public class GameManager : MonoBehaviour
         print("play");
     }
 
-    internal void GameOver()
+    public void GameOver()
     {
         print("GameOver");
         PlanetController.StopShrink();
+        OnGameOver?.Invoke();
     }
 }
