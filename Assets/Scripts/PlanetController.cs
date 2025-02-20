@@ -4,6 +4,9 @@ using System;
 
 public class PlanetController : MonoBehaviour
 {
+    public float Size => transform.localScale.x;
+
+    [SerializeField] private bool shrinkAtStart;
     [SerializeField] private float startSize;
     [SerializeField] private float endSize;
     [SerializeField] private float startingShrinkingSpeed;
@@ -21,7 +24,8 @@ public class PlanetController : MonoBehaviour
     {
         StopShrink();
         ResetSize();
-        StartShrink();        
+        if(shrinkAtStart)
+            StartShrink();        
     }
 
     public void StartShrink()
@@ -64,9 +68,13 @@ public class PlanetController : MonoBehaviour
 
     private void Shrink()
     {
-
         var currentScale = transform.localScale;
         currentScale = new Vector3(currentScale.x - currentShrinkingSpeed, currentScale.y - currentShrinkingSpeed, currentScale.z - currentShrinkingSpeed);
         transform.localScale = currentScale;
+    }
+
+    internal void SetSize(float size)
+    {
+        transform.localScale = new Vector3(size, size, size);
     }
 }
