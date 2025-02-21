@@ -18,7 +18,7 @@ public partial class PlayerController : MonoBehaviour
     private Rigidbody2D playerRB2D;
     private float dashCurrentCooldown;
     private bool recordInput;
-    [SerializeField] private bool canDash; //remove sf
+    private bool canDash; //remove sf
     private bool canMove;
     private bool isDashing;
 
@@ -59,7 +59,16 @@ public partial class PlayerController : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.OnGameOver.AddListener(()=>KillPlayer());
+        GameManager.Instance.OnPauseToggled.AddListener(()=>OnPauseToggled());
         InitPlayer();
+    }
+
+    private void OnPauseToggled()
+    {
+        if (GameManager.Instance.IsGamePaused)
+            recordInput = false;
+        else
+            recordInput = true;
     }
 
     private void Update()
@@ -127,6 +136,12 @@ public partial class PlayerController : MonoBehaviour
             print("dash");
             Dash();
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            print("pause");
+            GameManager.Instance.TogglePause();
+        }
+
     }
 
     private void MovePlayer(Direction direction)

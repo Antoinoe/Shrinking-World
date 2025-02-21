@@ -9,10 +9,13 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public UnityEvent OnGameOver;
     [HideInInspector] public UnityEvent OnGameStarts;
     [HideInInspector] public UnityEvent OnPauseToggled;
-    public bool IsGamePaused { get; private set; }
+    [field:SerializeField] public bool IsGamePaused { get; private set; }
+    [field:SerializeField] public bool IsGameRunning { get; private set; }
+    [field:SerializeField] public float ScoreMultiplier { get; private set; }
+    [field:SerializeField] public float Score { get; private set; }
     [field:SerializeField] public PlayerController PlayerController { get; private set; }
     [field:SerializeField] public CameraController CameraController { get; private set; }
-    [field:SerializeField] public PlanetController PlanetController { get; private set; }
+    [field:SerializeField] public PlanetController PlanetController { get; private set; }   
 
     private void Awake()
     {
@@ -21,10 +24,27 @@ public class GameManager : MonoBehaviour
             Destroy(this);
             return;
         }
-
+        
         Instance = this;
+        IsGameRunning = false;
+    }
 
-        DontDestroyOnLoad(this);
+    private void Start()
+    {
+        OnGameStarts.AddListener(() => InitializeGame());
+        OnGameOver.AddListener(() => IsGameRunning = false);
+    }
+
+    private void Update()
+    {
+        if(IsGameRunning && !IsGamePaused)
+            CalculateScore();
+    }
+
+    private void InitializeGame()
+    {
+        IsGameRunning = true;
+        Score = 0;
     }
 
     public void GameOver()
@@ -47,6 +67,7 @@ public class GameManager : MonoBehaviour
 
     public void ReturnToStartMenu()
     {
+        IsGamePaused = false;
         ReloadScene();
     }
 
@@ -60,5 +81,10 @@ public class GameManager : MonoBehaviour
         IsGamePaused = !IsGamePaused;
         OnPauseToggled?.Invoke();
         Time.timeScale = IsGamePaused ? 0 : 1;
+    }
+
+    private void CalculateScore()
+    {
+        Score += ScoreMultiplier * Time.deltaTime;
     }
 }
