@@ -74,4 +74,9 @@ public class UIController : MonoBehaviour
             m.menuObject.SetActive(false);
         }
     }
+
+    public void RedirectTo(string url)
+    {
+        Application.OpenURL(url);
+    }
 }

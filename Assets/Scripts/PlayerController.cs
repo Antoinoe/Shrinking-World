@@ -14,11 +14,12 @@ public partial class PlayerController : MonoBehaviour
     [field: SerializeField] public float DashDuration { get; private set; }
     [field: SerializeField] public float DashCooldown { get; private set; }
     public Direction Direction { get; private set; }
+    [field: SerializeField] public bool IsGrounded { get; internal set; }
 
     private Rigidbody2D playerRB2D;
     private float dashCurrentCooldown;
     private bool recordInput;
-    private bool canDash; //remove sf
+    private bool canDash;
     private bool canMove;
     private bool isDashing;
 
@@ -161,7 +162,8 @@ public partial class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        playerRB2D.AddForce(-GetOrientation() * JumpForce, ForceMode2D.Impulse);
+        if(IsGrounded)
+            playerRB2D.AddForce(-GetOrientation() * JumpForce, ForceMode2D.Impulse);
     }
 
     private void Dash()
