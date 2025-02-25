@@ -215,4 +215,9 @@ public partial class PlayerController : MonoBehaviour
     {
         DashSpeed += dashSpeed;
     }
+
+    internal void SetDashDelay(float dashDelay)
+    {
+        DashCooldown = Math.Clamp(dashDelay, DashDuration, 10);
+    }
 }

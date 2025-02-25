@@ -487,7 +487,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 60.000004, y: 60.000004, z: 60.000004}
+  m_LocalScale: {x: 60, y: 60, z: 60}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -1401,7 +1401,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.3, y: 25.6, z: -10}
+  m_LocalPosition: {x: 0.3, y: 35.3, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1772,6 +1772,7 @@ GameObject:
   - component: {fileID: 798642231}
   - component: {fileID: 798642233}
   - component: {fileID: 798642234}
+  - component: {fileID: 798642235}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1841,6 +1842,7 @@ MonoBehaviour:
   - {fileID: 1299601724378311464, guid: b4e63df16efb93e4da268eed8bc04de9, type: 3}
   - {fileID: 7485121234600904613, guid: 4b4c72b377b152440a128d749fce7b75, type: 3}
   - {fileID: 9048398068426611078, guid: a5d357e1c2b360d428bb7c133f64e2d6, type: 3}
+  - {fileID: 5559944155102919125, guid: 0a902986916a64f438723862286073a1, type: 3}
   delayBewteenPowerUpsSpawn: 2
   spawnHeightOffset: 0.5
 --- !u!114 &798642234
@@ -1865,6 +1867,27 @@ MonoBehaviour:
     menuType: 2
   gameOverScoreText: {fileID: 2088354393}
   inGameScoreText: {fileID: 1133220129}
+--- !u!114 &798642235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798642230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3628323932b9c3d48a1c19182d42e7c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canGenerateWalls: 1
+  wallSections:
+  - {fileID: 807109371865941992, guid: 12afd5cfbfe85944e8b195d548d1f137, type: 3}
+  - {fileID: 8178183267947312907, guid: e1945ef461960ff4fb8f52c84d005098, type: 3}
+  - {fileID: 4027065506870242450, guid: 80d4c3e51c7074e4fb31e330fa199132, type: 3}
+  - {fileID: 2401039819873589187, guid: 55b6fc1e3ff0af44d9cc43dd74285d4c, type: 3}
+  - {fileID: 1480404094657085473, guid: ddfb9383bad27094dbf15bccc77e5e05, type: 3}
+  wallSpacementError: 10
+  startingAngle: 35
 --- !u!1 &809269771
 GameObject:
   m_ObjectHideFlags: 0
@@ -8241,7 +8264,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalScale: {x: 7, y: 7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
