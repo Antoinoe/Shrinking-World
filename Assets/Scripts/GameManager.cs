@@ -11,11 +11,13 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public UnityEvent OnPauseToggled;
     [field:SerializeField] public bool IsGamePaused { get; private set; }
     [field:SerializeField] public bool IsGameRunning { get; private set; }
+    [field:SerializeField] public bool DisplayCanvasOnStart { get; private set; }
     [field:SerializeField] public float ScoreMultiplier { get; private set; }
     [field:SerializeField] public float Score { get; private set; }
     [field:SerializeField] public PlayerController PlayerController { get; private set; }
     [field:SerializeField] public CameraController CameraController { get; private set; }
     [field:SerializeField] public PlanetController PlanetController { get; private set; }   
+    [field:SerializeField] public UIController UiController{ get; private set; }   
 
     private void Awake()
     {
@@ -33,6 +35,8 @@ public class GameManager : MonoBehaviour
     {
         OnGameStarts.AddListener(() => InitializeGame());
         OnGameOver.AddListener(() => IsGameRunning = false);
+
+        UiController.DisplayCanvas(DisplayCanvasOnStart);
     }
 
     private void Update()

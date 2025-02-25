@@ -28,6 +28,8 @@ public abstract class PowerUp : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.OnGameOver.AddListener(() => Collectable = false);
+
         var planet = GameManager.Instance.PlanetController;
         float orientation = Vector2.SignedAngle(Vector2.down, GetOrientation());
 

@@ -7,8 +7,9 @@ public class PlanetController : MonoBehaviour
     public float Size => transform.localScale.x;
 
     [SerializeField] private bool shrinkAtStart;
-    [SerializeField] private float startSize;
-    [SerializeField] private float endSize;
+    [field: SerializeField] public float StartSize { get; private set; }
+    [field: SerializeField] public float EndSize { get; private set; }
+
     [SerializeField] private float startingShrinkingSpeed;
     [SerializeField] private float currentShrinkingSpeed;
     [SerializeField] private float shrinkingAcceleration;
@@ -52,7 +53,7 @@ public class PlanetController : MonoBehaviour
 
     public void ResetSize()
     {
-        transform.localScale = new Vector3(startSize, startSize, startSize);
+        transform.localScale = new Vector3(StartSize, StartSize, StartSize);
     }
 
     private void Update()
@@ -67,7 +68,7 @@ public class PlanetController : MonoBehaviour
 
     private void CheckSize()
     {
-        if(transform.localScale.x < endSize)
+        if(transform.localScale.x < EndSize)
         {
             GameManager.Instance.GameOver();
         }

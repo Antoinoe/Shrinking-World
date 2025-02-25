@@ -5,7 +5,8 @@ using UnityEngine;
 public partial class PlayerController : MonoBehaviour
 {
     [field: SerializeField] public Transform PlayerVisual { get; private set; }
-    [field: SerializeField] public float MoveSpeed {get; private set;}
+    [field: SerializeField] public float WalkSpeed {get; private set;}
+    [field: SerializeField] public float VelocityMultiplier {get; private set;}
     [field: SerializeField] public float JumpForce { get; private set; }
     [field: SerializeField] public float GravitySpeed { get; private set; }
     [field: SerializeField] public float GravityMultiplier { get; private set; }
@@ -14,9 +15,12 @@ public partial class PlayerController : MonoBehaviour
     [field: SerializeField] public float DashDuration { get; private set; }
     [field: SerializeField] public float DashCooldown { get; private set; }
     public Direction Direction { get; private set; }
-    [field: SerializeField] public bool IsGrounded { get; internal set; }
+    public bool IsGrounded { get; internal set; }
+
+    [SerializeField] private AnimationCurve VelocityOverDistance;
 
     private Rigidbody2D playerRB2D;
+    private SpriteRenderer spriteRenderer;
     private float dashCurrentCooldown;
     private bool recordInput;
     private bool canDash;
@@ -39,7 +43,7 @@ public partial class PlayerController : MonoBehaviour
 
     public void SetSpeed(float speed)
     {
-        MoveSpeed = speed;
+        WalkSpeed = speed;
     }
 
     public void SetJumpForce(float jumpForce)
@@ -50,9 +54,11 @@ public partial class PlayerController : MonoBehaviour
     private void Awake()
     {
         playerRB2D = PlayerVisual.GetComponent<Rigidbody2D>();
-        if(playerRB2D == null)
+        spriteRenderer = PlayerVisual.GetComponent<SpriteRenderer>();
+
+        if(!playerRB2D || !spriteRenderer)
         {
-            Debug.LogError("could not retrieve rigidbody2D form player visual");
+            Debug.LogError("could not retrieve all components form player visual");
             return;
         }
     }
@@ -74,11 +80,27 @@ public partial class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        ApplyVelocityMultiplier();
         ApplyDashCoolDown();
-        ApplyInputs();
+        HandleInputs();
         ApplyGravity();
         ApplyDashVelocity();
         UpdateVisualRotation();
+        UpdateSpriteFlipX();
+    }
+
+    private void UpdateSpriteFlipX()
+    {
+        spriteRenderer.flipX = Direction == Direction.RIGHT;
+    }
+
+    private void ApplyVelocityMultiplier()
+    {
+        var planetController = GameManager.Instance.PlanetController;
+        var distanceNormalized = (planetController.Size - planetController.EndSize) / (planetController.StartSize - planetController.EndSize);
+        print($"{distanceNormalized}");
+        var multiplier = 1 + VelocityOverDistance.Evaluate(distanceNormalized);
+        VelocityMultiplier = multiplier;
     }
 
     private void ApplyDashCoolDown()
@@ -93,7 +115,7 @@ public partial class PlayerController : MonoBehaviour
         if (!isDashing)
             return;
 
-        var dashSpeed = DashSpeed * DashMultiplier * Time.deltaTime;
+        var dashSpeed = DashSpeed * DashMultiplier * VelocityMultiplier* Time.deltaTime;
         dashSpeed = Direction == Direction.LEFT? dashSpeed : -dashSpeed;
         RotatePlayer(dashSpeed);
     }
@@ -112,7 +134,7 @@ public partial class PlayerController : MonoBehaviour
         playerRB2D.AddForce(GravityMultiplier * GravitySpeed * Time.fixedDeltaTime * GetOrientation());
     }
 
-    private void ApplyInputs()
+    private void HandleInputs()
     {
         if (!recordInput)
             return;
@@ -142,7 +164,6 @@ public partial class PlayerController : MonoBehaviour
             print("pause");
             GameManager.Instance.TogglePause();
         }
-
     }
 
     private void MovePlayer(Direction direction)
@@ -150,8 +171,8 @@ public partial class PlayerController : MonoBehaviour
         if (!canMove)
             return;
         Direction = direction;
-        var moveSpeed = Direction == Direction.LEFT? MoveSpeed : -MoveSpeed;
-        moveSpeed *= Time.deltaTime;
+        var moveSpeed = Direction == Direction.LEFT? WalkSpeed : -WalkSpeed;
+        moveSpeed *= Time.deltaTime * VelocityMultiplier;
         RotatePlayer(moveSpeed);
     }
 
@@ -190,5 +211,8 @@ public partial class PlayerController : MonoBehaviour
         dashCurrentCooldown = DashCooldown;
     }
 
-
+    internal void SetDashSpeed(float dashSpeed)
+    {
+        DashSpeed += dashSpeed;
+    }
 }

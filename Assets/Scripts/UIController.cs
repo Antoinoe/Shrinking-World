@@ -21,37 +21,18 @@ public class Menu
 
 public class UIController : MonoBehaviour
 {
-    [field:SerializeField] private List<Menu> menus;
+    [SerializeField] private Canvas canvas;
+    [SerializeField] private List<Menu> menus;
     [SerializeField] private TextMeshProUGUI gameOverScoreText;
     [SerializeField] private TextMeshProUGUI inGameScoreText;
 
-    private static string SCORE_TEXT_HEADER = "Score: ";
+    private const string SCORE_TEXT_HEADER = "Score: ";
 
-    private void Start()
+    public void DisplayCanvas(bool state)
     {
-        GameManager.Instance.OnGameStarts.AddListener(()=> CloseAllMenus());
-        GameManager.Instance.OnGameOver.AddListener(()=> OnGameOver());
-        GameManager.Instance.OnPauseToggled.AddListener(()=> TogglePauseMenu());
-    }
-
-    private void Update()
-    {
-        if (!GameManager.Instance.IsGamePaused && GameManager.Instance.IsGameRunning)
-            inGameScoreText.text = $"{SCORE_TEXT_HEADER}{(int)GameManager.Instance.Score}";
-    }
-
-    private void OnGameOver()
-    {
-        gameOverScoreText.text = $"{SCORE_TEXT_HEADER}{(int)GameManager.Instance.Score}";
-        OpenMenu(MenuType.GAMEOVER);
-    }
-
-    private void TogglePauseMenu()
-    {
-        if(GameManager.Instance.IsGamePaused)
-            OpenMenu(MenuType.PAUSE);
-        else
-            CloseMenu(MenuType.PAUSE);
+        if (!canvas)
+            return;
+        canvas.gameObject.SetActive(state);
     }
 
     public void OpenMenu(MenuType menu)
@@ -78,5 +59,32 @@ public class UIController : MonoBehaviour
     public void RedirectTo(string url)
     {
         Application.OpenURL(url);
+    }
+
+    private void Start()
+    {
+        GameManager.Instance.OnGameStarts.AddListener(() => CloseAllMenus());
+        GameManager.Instance.OnGameOver.AddListener(() => OnGameOver());
+        GameManager.Instance.OnPauseToggled.AddListener(() => TogglePauseMenu());
+    }
+
+    private void Update()
+    {
+        if (!GameManager.Instance.IsGamePaused && GameManager.Instance.IsGameRunning)
+            inGameScoreText.text = $"{SCORE_TEXT_HEADER}{(int)GameManager.Instance.Score}";
+    }
+
+    private void OnGameOver()
+    {
+        gameOverScoreText.text = $"{SCORE_TEXT_HEADER}{(int)GameManager.Instance.Score}";
+        OpenMenu(MenuType.GAMEOVER);
+    }
+
+    private void TogglePauseMenu()
+    {
+        if (GameManager.Instance.IsGamePaused)
+            OpenMenu(MenuType.PAUSE);
+        else
+            CloseMenu(MenuType.PAUSE);
     }
 }
