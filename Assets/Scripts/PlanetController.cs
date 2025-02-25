@@ -1,11 +1,10 @@
 using UnityEngine;
-using DG.Tweening;
-using System;
 
 public class PlanetController : MonoBehaviour
 {
     public float Size => transform.localScale.x;
 
+    [SerializeField] private ParticleSystem explosionParticle;
     [SerializeField] private bool shrinkAtStart;
     [field: SerializeField] public float StartSize { get; private set; }
     [field: SerializeField] public float EndSize { get; private set; }
@@ -15,10 +14,12 @@ public class PlanetController : MonoBehaviour
     [SerializeField] private float shrinkingAcceleration;
 
     private bool canShrink = false;
+    private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
         canShrink = false;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Start()
@@ -39,6 +40,8 @@ public class PlanetController : MonoBehaviour
     private void OnGameOver()
     {
         StopShrink();
+        spriteRenderer.enabled = false;
+        explosionParticle.Play();
     }
 
     public void StartShrink()
