@@ -219,7 +219,7 @@ public partial class PlayerController : MonoBehaviour
 
     internal void SetDashSpeed(float dashSpeed)
     {
-        DashSpeed += dashSpeed;
+        DashSpeed = dashSpeed;
     }
 
     internal void SetDashDelay(float dashDelay)

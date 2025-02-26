@@ -5,6 +5,7 @@ public class DashSpeed : PowerUp
     [SerializeField] private float dashSpeed;
     protected override void ApplyEffect()
     {
-        GameManager.Instance.PlayerController.SetDashSpeed(dashSpeed);
+        var player = GameManager.Instance.PlayerController;
+        player.SetDashSpeed(player.DashSpeed - dashSpeed);
     }
 }
