@@ -45,8 +45,11 @@ public class PowerUpGenerator : MonoBehaviour
 
     private void Spawn()
     {
+        if (!canSpawn)
+            return;
+
         var randomDir = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
-        var spawnPos = randomDir * GameManager.Instance.PlanetController.Size/1.98f /*+ new Vector2(spawnHeightOffset, spawnHeightOffset)*/;
+        var spawnPos = randomDir * GameManager.Instance.PlanetController.Size/1.98f;
         var randomPowerUpIndex = Random.Range(0, powerUpsPrefab.Count);
         var newPowerUp = Instantiate(powerUpsPrefab[randomPowerUpIndex]);
         newPowerUp.transform.position = spawnPos;

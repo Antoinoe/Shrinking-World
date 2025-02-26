@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     [field:SerializeField] public PlayerController PlayerController { get; private set; }
     [field:SerializeField] public CameraController CameraController { get; private set; }
     [field:SerializeField] public PlanetController PlanetController { get; private set; }   
-    [field:SerializeField] public UIController UiController{ get; private set; }   
+    [field:SerializeField] public UIController UiController { get; private set; }
 
     private void Awake()
     {

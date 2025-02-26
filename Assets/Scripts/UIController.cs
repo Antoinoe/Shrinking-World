@@ -64,7 +64,7 @@ public class UIController : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.OnGameStarts.AddListener(() => CloseAllMenus());
-        GameManager.Instance.OnGameOver.AddListener(() => OnGameOver());
+        GameManager.Instance.PlanetController.OnPlanetExplosionEnd.AddListener(() => OnGameOver());
         GameManager.Instance.OnPauseToggled.AddListener(() => TogglePauseMenu());
     }
 

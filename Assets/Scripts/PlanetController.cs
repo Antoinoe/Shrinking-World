@@ -1,24 +1,35 @@
 using UnityEngine;
+using UnityEngine.Events;
+using DG.Tweening;
+using System;
+using System.Collections;
 
 public class PlanetController : MonoBehaviour
 {
-    public float Size => transform.localScale.x;
+    
+    [HideInInspector] public UnityEvent OnPlanetExplosionEnd;
+    [HideInInspector] public UnityEvent OnPlanetExplosionStart;
 
-    [SerializeField] private ParticleSystem explosionParticle;
-    [SerializeField] private bool shrinkAtStart;
+    public float Size => transform.localScale.x;
     [field: SerializeField] public float StartSize { get; private set; }
     [field: SerializeField] public float EndSize { get; private set; }
 
+    [SerializeField] private ParticleSystem explosionParticle;
+    [SerializeField] private bool shrinkAtStart;
     [SerializeField] private float startingShrinkingSpeed;
     [SerializeField] private float currentShrinkingSpeed;
     [SerializeField] private float shrinkingAcceleration;
+    [SerializeField] private float rotationAnimationSpeed;
+    [SerializeField] private float planetGameOverAnimationDuration;
 
     private bool canShrink = false;
+    private bool doRotateAnimation = false;
     private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
         canShrink = false;
+        doRotateAnimation = false;
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -40,8 +51,26 @@ public class PlanetController : MonoBehaviour
     private void OnGameOver()
     {
         StopShrink();
-        spriteRenderer.enabled = false;
+        FinalShrinkAnimation();
+    }
+
+    private void FinalShrinkAnimation()
+    {
+        Sequence seq = DOTween.Sequence();
+        doRotateAnimation = true;
+        seq.Append(transform.DOScale(0, planetGameOverAnimationDuration)).OnComplete(()=>
+        {
+            StartCoroutine(DestroyPlanetCoroutine());
+            spriteRenderer.enabled = false;
+        });
+    }
+
+    private IEnumerator DestroyPlanetCoroutine()
+    {
+        OnPlanetExplosionStart?.Invoke();
         explosionParticle.Play();
+        yield return new WaitForSeconds(explosionParticle.main.duration / 2f);
+        OnPlanetExplosionEnd?.Invoke();
     }
 
     public void StartShrink()
@@ -61,6 +90,9 @@ public class PlanetController : MonoBehaviour
 
     private void Update()
     {
+        if (doRotateAnimation)
+            transform.Rotate(new Vector3(0,0, rotationAnimationSpeed * Time.deltaTime));
+
         if (!canShrink)
             return;
 

@@ -20,6 +20,7 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private AnimationCurve VelocityOverDistance;
 
     private Rigidbody2D playerRB2D;
+    private CapsuleCollider2D collider2D;
     private SpriteRenderer spriteRenderer;
     private float dashCurrentCooldown;
     private bool recordInput;
@@ -55,8 +56,9 @@ public partial class PlayerController : MonoBehaviour
     {
         playerRB2D = PlayerVisual.GetComponent<Rigidbody2D>();
         spriteRenderer = PlayerVisual.GetComponent<SpriteRenderer>();
+        collider2D = PlayerVisual.GetComponent<CapsuleCollider2D>();
 
-        if(!playerRB2D || !spriteRenderer)
+        if (!playerRB2D || !spriteRenderer)
         {
             Debug.LogError("could not retrieve all components form player visual");
             return;
@@ -67,15 +69,20 @@ public partial class PlayerController : MonoBehaviour
     {
         GameManager.Instance.OnGameOver.AddListener(()=>KillPlayer());
         GameManager.Instance.OnPauseToggled.AddListener(()=>OnPauseToggled());
+        GameManager.Instance.PlanetController.OnPlanetExplosionStart.AddListener(() => OnPlanetExplosionStart());
         InitPlayer();
+    }
+
+    private void OnPlanetExplosionStart()
+    {
+        GameManager.Instance.CameraController.DoFollowPlayer = false;
+        collider2D.enabled = false;
+        Jump(JumpForce * 10, true);
     }
 
     private void OnPauseToggled()
     {
-        if (GameManager.Instance.IsGamePaused)
-            recordInput = false;
-        else
-            recordInput = true;
+        recordInput = !GameManager.Instance.IsGamePaused;
     }
 
     private void Update()
@@ -152,7 +159,7 @@ public partial class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             print("jump");
-            Jump();
+            Jump(JumpForce);
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -181,10 +188,10 @@ public partial class PlayerController : MonoBehaviour
         transform.Rotate(new Vector3(0f, 0f, speed));
     }
 
-    private void Jump()
+    private void Jump(float jumpForce, bool forceJump = false)
     {
-        if(IsGrounded)
-            playerRB2D.AddForce(-GetOrientation() * JumpForce, ForceMode2D.Impulse);
+        if(IsGrounded || forceJump)
+            playerRB2D.AddForce(-GetOrientation() * jumpForce, ForceMode2D.Impulse);
     }
 
     private void Dash()
@@ -195,7 +202,6 @@ public partial class PlayerController : MonoBehaviour
         recordInput = false;
         isDashing = true;
         StartCoroutine(EndDash());
-        
     }
 
     private IEnumerator EndDash()

@@ -540,13 +540,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b42e9db9615f343924fcf0788ee39b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionParticle: {fileID: 1899839575}
-  shrinkAtStart: 0
+  OnPlanetExploded:
+    m_PersistentCalls:
+      m_Calls: []
   <StartSize>k__BackingField: 60
   <EndSize>k__BackingField: 3
-  startingShrinkingSpeed: 0.01
+  explosionParticle: {fileID: 1899839575}
+  shrinkAtStart: 0
+  startingShrinkingSpeed: 0.015
   currentShrinkingSpeed: 0
-  shrinkingAcceleration: 0.0001
+  shrinkingAcceleration: 0.001
+  rotationAnimationSpeed: 100
+  planetGameOverAnimationDuration: 2
 --- !u!50 &155987487
 Rigidbody2D:
   serializedVersion: 5
