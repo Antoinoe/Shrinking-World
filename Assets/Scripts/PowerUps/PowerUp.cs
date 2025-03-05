@@ -9,7 +9,10 @@ public abstract class PowerUp : MonoBehaviour
     protected Vector2 GetOrientation()
         => ((Vector2)GameManager.Instance.PlanetController.transform.position - (Vector2)transform.position).normalized;
 
-    protected abstract void ApplyEffect();
+    protected virtual void ApplyEffect()
+    {
+        GameManager.Instance.UpdateScoreMultiplier(GameManager.Instance.ScoreMultiplier + 0.5f);
+    }
 
     public void Despawn()
     {

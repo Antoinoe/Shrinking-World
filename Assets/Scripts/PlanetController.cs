@@ -90,6 +90,9 @@ public class PlanetController : MonoBehaviour
 
     private void Update()
     {
+        if (!GameManager.Instance.IsGameRunning || GameManager.Instance.IsGamePaused)
+            return;
+
         if (doRotateAnimation)
             transform.Rotate(new Vector3(0,0, rotationAnimationSpeed * Time.deltaTime));
 

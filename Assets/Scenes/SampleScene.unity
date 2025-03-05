@@ -540,16 +540,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b42e9db9615f343924fcf0788ee39b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnPlanetExploded:
+  OnPlanetExplosionEnd:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlanetExplosionStart:
     m_PersistentCalls:
       m_Calls: []
   <StartSize>k__BackingField: 60
   <EndSize>k__BackingField: 3
   explosionParticle: {fileID: 1899839575}
   shrinkAtStart: 0
-  startingShrinkingSpeed: 0.015
+  startingShrinkingSpeed: 0.0012
   currentShrinkingSpeed: 0
-  shrinkingAcceleration: 0.001
+  shrinkingAcceleration: 0.0005
   rotationAnimationSpeed: 100
   planetGameOverAnimationDuration: 2
 --- !u!50 &155987487
@@ -1529,7 +1532,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &752169816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1849,7 +1852,7 @@ MonoBehaviour:
   - {fileID: 7485121234600904613, guid: 4b4c72b377b152440a128d749fce7b75, type: 3}
   - {fileID: 9048398068426611078, guid: a5d357e1c2b360d428bb7c133f64e2d6, type: 3}
   - {fileID: 5559944155102919125, guid: 0a902986916a64f438723862286073a1, type: 3}
-  delayBewteenPowerUpsSpawn: 2
+  delayBewteenPowerUpsSpawn: 1.5
   spawnHeightOffset: 0.5
 --- !u!114 &798642234
 MonoBehaviour:
@@ -1894,7 +1897,7 @@ MonoBehaviour:
   - {fileID: 1480404094657085473, guid: ddfb9383bad27094dbf15bccc77e5e05, type: 3}
   wallSpacementError: 10
   startingAngle: 35
-  minHeight: 0
+  minHeight: 3
 --- !u!1 &809269771
 GameObject:
   m_ObjectHideFlags: 0
@@ -8325,13 +8328,15 @@ MonoBehaviour:
   <PlayerVisual>k__BackingField: {fileID: 1734471497}
   <WalkSpeed>k__BackingField: 5
   <VelocityMultiplier>k__BackingField: 0
-  <JumpForce>k__BackingField: 10
+  <JumpForce>k__BackingField: 15
   <GravitySpeed>k__BackingField: 9.81
   <GravityMultiplier>k__BackingField: 50
+  <GravityMultiplierMultiplier>k__BackingField: 0
   <DashSpeed>k__BackingField: 50
   <DashMultiplier>k__BackingField: 1
   <DashDuration>k__BackingField: 0.3
   <DashCooldown>k__BackingField: 4
+  <IsDashingToGround>k__BackingField: 0
   VelocityOverDistance:
     serializedVersion: 2
     m_Curve:

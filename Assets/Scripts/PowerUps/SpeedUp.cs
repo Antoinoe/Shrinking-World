@@ -6,6 +6,7 @@ public class SpeedUp : PowerUp
     
     protected override void ApplyEffect()
     {
+        base.ApplyEffect();
         Debug.Log("Speed Up!!!");
         GameManager.Instance.PlayerController.SetSpeed(GameManager.Instance.PlayerController.WalkSpeed + speed);
     }

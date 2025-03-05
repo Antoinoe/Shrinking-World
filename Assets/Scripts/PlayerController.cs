@@ -10,26 +10,31 @@ public partial class PlayerController : MonoBehaviour
     [field: SerializeField] public float JumpForce { get; private set; }
     [field: SerializeField] public float GravitySpeed { get; private set; }
     [field: SerializeField] public float GravityMultiplier { get; private set; }
+    [field: SerializeField] public float GravityMultiplierMultiplier { get; private set; }
     [field: SerializeField] public float DashSpeed { get; private set; }
     [field: SerializeField] public float DashMultiplier { get; private set; }
     [field: SerializeField] public float DashDuration { get; private set; }
     [field: SerializeField] public float DashCooldown { get; private set; }
     public Direction Direction { get; private set; }
     public bool IsGrounded { get; internal set; }
+    [field: SerializeField] public bool IsDashingToGround { get; internal set; }
 
     [SerializeField] private AnimationCurve VelocityOverDistance;
-
     private Rigidbody2D playerRB2D;
-    private CapsuleCollider2D collider2D;
+    private CapsuleCollider2D col2D;
     private SpriteRenderer spriteRenderer;
     private float dashCurrentCooldown;
     private bool recordInput;
     private bool canDash;
     private bool canMove;
     private bool isDashing;
-
+    
     public void InitPlayer()
     {
+        playerRB2D = PlayerVisual.GetComponent<Rigidbody2D>();
+        spriteRenderer = PlayerVisual.GetComponent<SpriteRenderer>();
+        col2D = PlayerVisual.GetComponent<CapsuleCollider2D>();
+
         canMove = true;
         recordInput = true;
     }
@@ -52,31 +57,18 @@ public partial class PlayerController : MonoBehaviour
         JumpForce = jumpForce;
     }
 
-    private void Awake()
-    {
-        playerRB2D = PlayerVisual.GetComponent<Rigidbody2D>();
-        spriteRenderer = PlayerVisual.GetComponent<SpriteRenderer>();
-        collider2D = PlayerVisual.GetComponent<CapsuleCollider2D>();
-
-        if (!playerRB2D || !spriteRenderer)
-        {
-            Debug.LogError("could not retrieve all components form player visual");
-            return;
-        }
-    }
-
     private void Start()
     {
         GameManager.Instance.OnGameOver.AddListener(()=>KillPlayer());
+        GameManager.Instance.OnGameStarts.AddListener(() => InitPlayer());
         GameManager.Instance.OnPauseToggled.AddListener(()=>OnPauseToggled());
         GameManager.Instance.PlanetController.OnPlanetExplosionStart.AddListener(() => OnPlanetExplosionStart());
-        InitPlayer();
     }
 
     private void OnPlanetExplosionStart()
     {
         GameManager.Instance.CameraController.DoFollowPlayer = false;
-        collider2D.enabled = false;
+        col2D.enabled = false;
         Jump(JumpForce * 10, true);
     }
 
@@ -87,6 +79,9 @@ public partial class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.IsGamePaused || !GameManager.Instance.IsGameRunning)
+            return;
+
         ApplyVelocityMultiplier();
         ApplyDashCoolDown();
         HandleInputs();
@@ -105,7 +100,6 @@ public partial class PlayerController : MonoBehaviour
     {
         var planetController = GameManager.Instance.PlanetController;
         var distanceNormalized = (planetController.Size - planetController.EndSize) / (planetController.StartSize - planetController.EndSize);
-        print($"{distanceNormalized}");
         var multiplier = 1 + VelocityOverDistance.Evaluate(distanceNormalized);
         VelocityMultiplier = multiplier;
     }
@@ -133,7 +127,7 @@ public partial class PlayerController : MonoBehaviour
         PlayerVisual.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
-    private Vector2 GetOrientation()
+    public Vector2 GetOrientation()
         => ((Vector2)transform.position - (Vector2)PlayerVisual.transform.position).normalized;
 
     private void ApplyGravity()
@@ -148,28 +142,31 @@ public partial class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            print("left");
+            //print("left");
             MovePlayer(Direction.LEFT);
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            print("right");
+            //print("right");
             MovePlayer(Direction.RIGHT);
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            print("jump");
+            //print("jump");
             Jump(JumpForce);
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if (IsDashingToGround || IsGrounded)
+                return;
+            //print("down");
+            IsDashingToGround = true;
+            Jump(-JumpForce*2, true);
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            print("dash");
+            //print("dash");
             Dash();
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            print("pause");
-            GameManager.Instance.TogglePause();
         }
     }
 

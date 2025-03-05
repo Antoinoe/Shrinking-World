@@ -8,6 +8,7 @@ public class GroundChecker : MonoBehaviour
         if (!collider.CompareTag("Ground"))
             return;
         GameManager.Instance.PlayerController.IsGrounded = true;
+        GameManager.Instance.PlayerController.IsDashingToGround = false;
     }
 
     private void OnTriggerStay2D(Collider2D collider)

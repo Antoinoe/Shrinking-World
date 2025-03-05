@@ -41,7 +41,13 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(IsGameRunning && !IsGamePaused)
+        if (Input.GetKeyDown(KeyCode.Escape) && IsGameRunning)
+        {
+            print("pause");
+            TogglePause();
+        }
+
+        if (IsGameRunning && !IsGamePaused)
             CalculateScore();
     }
 
@@ -71,6 +77,7 @@ public class GameManager : MonoBehaviour
 
     public void ReturnToStartMenu()
     {
+        OnGameOver?.Invoke();
         IsGamePaused = false;
         ReloadScene();
     }
@@ -85,6 +92,11 @@ public class GameManager : MonoBehaviour
         IsGamePaused = !IsGamePaused;
         OnPauseToggled?.Invoke();
         Time.timeScale = IsGamePaused ? 0 : 1;
+    }
+
+    public void UpdateScoreMultiplier(float scoreMultiplier)
+    {
+        ScoreMultiplier = scoreMultiplier;
     }
 
     private void CalculateScore()
